@@ -8,10 +8,17 @@ public class RATClientFiles {
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in);
+			//String target_ip = 192.168.178.69;
+			//String target_port = 8080;
+			//System.out.println("Select a ip for the target, or press enter to use the standard ip. Standard ip = " + target_ip);
+			//String target_ip = scanner.nextLine();
+			//System.out.println("Select the Port used or press enter to use the standard port. Standard Port = " + target_port);
+			// check if new input is give, how?
+			//String target_ip = scanner.nextLine();
              Socket socket = new Socket("192.168.178.69", 8080);
+  			 // Socket socket = new Socket(target_ip, target_port);
              DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
              DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()))) {
-
             System.out.println("Connected to Server at: '" + socket.getInetAddress().getHostAddress() + "' Enter a command:");
 
             while (true) {
